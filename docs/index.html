@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>爱的信件 · AI 书信陪伴 · 产品与支持</title>
-  <meta name="description" content="爱的信件（Love Letter）：在 iPhone 上与笔下人物书信往来，通过 OpenRouter 调用 AI 生成回信。信件与设定存于本机，自备 API Key。">
+  <title>Love Letter · 产品与支持</title>
+  <meta name="description" content="Love Letter（爱的信件）：iPhone 书信式互动，自备 OpenRouter API 生成回信；数据主要在本机。">
   <style>
     :root {
       color-scheme: light dark;
@@ -29,89 +29,78 @@
     }
     * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", sans-serif;
-      line-height: 1.65;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", sans-serif;
+      line-height: 1.6;
       color: var(--fg);
       background: var(--bg);
       margin: 0;
-      padding: 1.5rem 1rem 3rem;
-      max-width: 44rem;
+      padding: 1.25rem 1rem 2.5rem;
+      max-width: 42rem;
       margin-left: auto;
       margin-right: auto;
     }
     header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.25rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--border);
     }
-    h1 { font-size: 1.5rem; margin: 0 0 0.5rem; font-weight: 600; }
-    .subtitle { color: var(--muted); font-size: 0.95rem; margin: 0; }
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent);
-      border: 1px solid var(--border);
-      padding: 0.2rem 0.5rem;
-      border-radius: 6px;
-      margin-top: 0.75rem;
-    }
     .lang-switch {
-      display: inline-flex;
+      display: flex;
+      justify-content: flex-end;
       gap: 0.45rem;
-      margin: 0 0 0.9rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
     }
     .lang-switch button {
       border: 1px solid var(--border);
-      background: transparent;
+      background: var(--card);
       color: var(--fg);
-      padding: 0.22rem 0.62rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       cursor: pointer;
     }
     .lang-switch button.active {
       border-color: var(--accent);
-      color: #fff;
       background: var(--accent);
+      color: #fff;
+    }
+    h1 { font-size: 1.45rem; margin: 0 0 0.35rem; font-weight: 600; }
+    .subtitle { color: var(--muted); font-size: 0.92rem; margin: 0; }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      margin-top: 0.65rem;
     }
     section {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem 1.35rem;
-      margin-bottom: 1.25rem;
+      padding: 1.1rem 1.2rem;
+      margin-bottom: 1rem;
     }
-    h2 { font-size: 1.1rem; margin: 0 0 0.75rem; font-weight: 600; }
-    p, ul { margin: 0.5rem 0; font-size: 0.95rem; }
-    ul { padding-left: 1.25rem; }
+    h2 { font-size: 1.05rem; margin: 0 0 0.55rem; font-weight: 600; }
+    h3 { font-size: 0.95rem; margin: 0.85rem 0 0.4rem; font-weight: 600; }
+    h3:first-of-type { margin-top: 0; }
+    p, ul { margin: 0.45rem 0; font-size: 0.92rem; }
+    ul { padding-left: 1.15rem; }
     a { color: var(--link); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    footer {
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    section h3 {
-      font-size: 1rem;
-      margin: 1.1rem 0 0.5rem;
-      font-weight: 600;
-    }
-    section h3:first-of-type {
-      margin-top: 0;
-    }
-    .disclaimer-lead {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin: 0 0 1rem;
-    }
+    .muted { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.75rem; }
+    footer { margin-top: 1.5rem; font-size: 0.78rem; color: var(--muted); }
+    code { font-size: 0.88em; }
   </style>
 </head>
 <body>
   <header>
-    <div class="lang-switch" role="group" aria-label="Language switcher">
-      <button type="button" data-lang-btn="zh-Hans">中文</button>
-      <button type="button" data-lang-btn="en">English</button>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="zh-Hans">中文</button>
+      <button type="button" data-lang="en">English</button>
     </div>
     <h1 id="brand"></h1>
     <p class="subtitle" id="subtitle"></p>
@@ -127,383 +116,308 @@
   <footer id="footer"></footer>
 
   <script>
-    const i18n = {
+    const SUPPORT_URL = "https://agent026-026.github.io/loveletter_web/";
+
+    const STR = {
       "zh-Hans": {
-        meta: {
-          title: "爱的信件 · AI 书信陪伴 · 产品与支持",
-          description: "爱的信件（Love Letter）：在 iPhone 上与笔下人物书信往来，通过 OpenRouter 调用 AI 生成回信。信件与设定存于本机，自备 API Key。"
-        },
-        header: {
-          brand: "爱的信件",
-          subtitle: "与心中笔下人物的书信往来 · iOS · 自备 OpenRouter API",
-          badge: "生活方式 / 书写",
-          langZh: "中文",
-          langEn: "English"
-        },
-        product: {
-          title: "产品说明",
-          paragraphs: [
-            "「爱的信件」（Love Letter）是一款在 iPhone 上使用的书信式体验应用：你可以为一位「笔下人物」设定称呼、关系与性格，用信件与对方交流；当你寄出自己的信后，应用会通过 <strong>OpenRouter</strong> 调用你所选的 AI 模型，生成一封<strong>助理回信</strong>。回信在随机等待时间结束后可读，以模拟「信件在途中」的节奏。应用侧重陪伴与共情表达，适合希望以文字整理情绪、延续记忆或练习温柔对话的用户。",
-            "使用本应用需要你在设置中填写有效的 <strong>OpenRouter API Key</strong>，并保证网络可访问 OpenRouter。开发者<strong>不运营</strong>用于中转或长期存储你通信内容的自有服务器；信件与人物设定默认保存在本设备。"
-          ]
-        },
-        features: {
-          title: "功能概要",
-          items: [
-            "为通信对象设定名称、关系摘要、性格与称呼方式，并可填写可选的「回信书写要求」。",
-            "以书信形式撰写与阅读往来；AI 回信生成后进入锁定状态，在约 <strong>5 分钟至 8 小时</strong>之间的随机整分钟间隔后解锁可读（每封信不同）。",
-            "使用用户自备的 <strong>OpenRouter API Key</strong>；可在设置中配置<strong>模型 ID</strong>（默认示例为 <code>openai/gpt-4o-mini</code>）。",
-            "API Key 保存在系统<strong>钥匙串</strong>；信件与对象资料由 <strong>SwiftData</strong> 存于本机。可选开启本地通知，在来信可读时提醒；通知文案为模糊提示，<strong>不包含信件正文</strong>。",
-            "支持浅色 / 深色 / 跟随系统外观；可在设置中删除本机全部通信数据（不自动清除钥匙串中的 API Key）。"
-          ]
-        },
-        support: {
-          title: "支持与反馈",
-          line1: "技术支持、建议与问题反馈请通过应用源代码仓库联系。",
-          repo: "https://agent026-026.github.io/loveletter_web/"
-        },
-        privacy: {
-          title: "隐私与数据",
-          lead: "以下为「爱的信件」在处理你的内容与调用 AI 时的数据说明。关于 OpenRouter 及各模型提供方对 API 数据的处理，须以其 <a href=\"https://openrouter.ai/privacy\" rel=\"noopener noreferrer\">隐私政策</a>、<a href=\"https://openrouter.ai/terms\" rel=\"noopener noreferrer\">服务条款</a> 及各服务商公开文档为准。",
-          blocks: [
-            {
-              h3: "我们处理哪些数据",
-              items: [
-                "你在设备上创建或编辑的<strong>信件正文、发送状态、解锁时间</strong>以及与线程关联的<strong>对象资料</strong>（如称呼、关系与性格描述、可选回信要求等）默认保存在本机，用于应用内的展示与管理。",
-                "你在<strong>设置</strong>中填写的 <strong>OpenRouter API Key</strong> 保存在系统<strong>钥匙串</strong>；所选<strong>模型 ID</strong>、外观偏好等保存在本机用户偏好中，用于组装网络请求与界面。",
-                "本应用<strong>不会</strong>在设备上收集与你身份绑定的生物特征数据；AI 回信功能处理的是<strong>你主动输入的文本</strong>（信件与上述对象设定中的文字），而非用于人脸识别的图像模板上传（本应用核心流程不涉及此类数据）。",
-                "仅在你<strong>主动寄出用户信并成功触发「生成回信」</strong>时，应用会将当次请求所需的<strong>文本内容</strong>（通常包括：为模型编写的系统提示中的对象设定摘要、往来信件中已发送且仍保留在应用内的对话文本，以及为维持对话结构而使用的占位说明）通过<strong>加密连接（HTTPS）</strong>直接发送至 <strong>OpenRouter</strong>；OpenRouter 会根据其路由规则将请求转发至你所选模型对应的提供方。",
-                "若你授权<strong>本地通知</strong>，系统仅在 scheduled 时间触发提醒；通知内容不包含信件正文，开发者不通过通知渠道收集额外通信内容。"
-              ]
-            },
-            {
-              h3: "我们如何使用这些数据",
-              items: [
-                "仅用于调用第三方大语言模型，将你的来信与上下文<strong>转化为助理回信文本</strong>，并在应用内按产品设计展示（含锁定与解锁流程）。",
-                "<strong>不会</strong>将你的内容用于开发者侧的广告定向、用户画像构建，或与本应用「书信与回信」功能无关的目的；开发者<strong>不运营</strong>用于中转或存储你通信内容的自有后端服务器。"
-              ]
-            },
-            {
-              h3: "是否与第三方共享、数据路径",
-              items: [
-                "<strong>会。</strong>为实现 AI 回信，在你发起请求时，相关<strong>文本</strong>会先由你的设备发送至 <strong>OpenRouter</strong>（openrouter.ai），再由其转发至所选<strong>模型提供方</strong>。数据路径为：<strong>你的 iPhone / iPad 设备 → OpenRouter → 所选 AI 模型服务</strong>。",
-                "各环节服务商对该等数据的存储、日志与留存政策由其各自条款约束；我们不控制第三方内部日志细则，请务必查阅其官方说明。"
-              ]
-            },
-            {
-              h3: "保留期限",
-              items: [
-                "<strong>你的设备上</strong>：信件与对象资料保存在应用沙盒内，直至你使用「删除所有通信数据」、删除应用或清除应用数据；API Key 在钥匙串中保留直至你在设置中移除或系统清除钥匙串项。",
-                "<strong>OpenRouter / 模型侧</strong>：请求与响应的处理与留存遵循对应产品的现行政策，请以 OpenRouter 及各模型提供方文档为准。"
-              ]
-            },
-            {
-              h3: "你的选择与撤回",
-              items: [
-                "你可随时在设置中<strong>移除 API Key</strong>或<strong>停止使用回信生成</strong>；未发起网络请求时，应用不会向 OpenRouter 传输用于生成回信的上述文本。",
-                "你可关闭或撤销通知授权；可在设置中删除本机全部通信数据（API Key 与部分界面设置可能保留，详见应用内说明）。",
-                "请确保你对输入内容拥有合法权利，勿提交违法、侵权或保密义务不允许外传的信息。"
-              ]
-            }
-          ]
-        },
-        ai: {
-          title: "AI 与生成式内容声明",
-          lead: "本应用的核心能力依赖<strong>生成式人工智能（大语言模型）</strong>生成助理回信。使用本功能前，请认真阅读以下声明。",
-          blocks: [
-            {
-              h3: "生成内容的性质",
-              items: [
-                "应用中展示的助理回信、语气与情节建议等均<strong>由 AI 模型自动生成</strong>，并非真人撰写，也未经人工事实核查。",
-                "输出可能存在<strong>错误、不贴切、重复、情绪化过度或不足、或与你的真实经历不符</strong>等情况，亦可能反映训练数据中的统计性偏见；请务必<strong>自行辨别</strong>，将其视为辅助表达工具而非客观事实或承诺。"
-              ]
-            },
-            {
-              h3: "非专业建议",
-              items: [
-                "AI 生成的文字<strong>不构成</strong>且<strong>不能替代</strong>心理咨询、医疗、法律、危机干预或其他专业服务。",
-                "若你正在经历心理危机、家庭暴力风险、自伤或伤人风险等，请立即联系当地紧急服务或专业机构；本应用无法监测或干预现实危险。"
-              ]
-            },
-            {
-              h3: "你的责任与合理使用",
-              items: [
-                "你对输入内容的合法性及基于生成内容所产生的行为负责；请勿将输出用于违法、欺诈、骚扰或侵犯他人（含逝者相关权益与肖像名誉等）的行为。",
-                "模型可用性、输出风格与政策以 <strong>OpenRouter</strong> 及所选<strong>模型提供方</strong>的当前服务为准；因第三方服务变更、地域限制或网络原因导致的不可用，以服务商规则为准。"
-              ]
-            }
-          ]
-        },
-        requirements: {
-          title: "系统与网络",
-          items: [
-            "需要可访问 <strong>openrouter.ai</strong> 的网络环境，以及有效的 OpenRouter API Key。",
-            "具体 iOS 最低版本以 App Store 上架信息为准。"
-          ]
-        },
-        footer: {
-          copyright: "© 2026 爱的信件（Love Letter）",
-          note: "本页由 <code>loveletter_web</code> 仓库托管，用于公开产品与隐私说明；应用源代码见上文仓库链接。"
-        }
+        metaTitle: "Love Letter · 产品与支持",
+        metaDesc: "Love Letter（爱的信件）：iPhone 书信式互动，自备 OpenRouter API 生成回信；数据主要在本机。",
+        brand: "Love Letter（爱的信件）",
+        subtitle: "与笔下人物书信往来 · iOS · 自备 OpenRouter API",
+        badge: "生活方式 / 书写",
+        btnZh: "中文",
+        btnEn: "English",
+
+        productTitle: "产品说明",
+        productP: [
+          "在 iPhone 上为一位通信对象设定称呼、关系与性格，以书信形式往来。寄信后，应用通过 <strong>OpenRouter</strong> 调用你选择的模型生成<strong>助理回信</strong>；回信经随机等待后可读，模拟「在途中」。侧重陪伴与情感表达，非真人写作。",
+          "须在设置中填写有效的 <strong>OpenRouter API Key</strong> 并保持网络可用。开发者<strong>无自有服务器</strong>中转或长期存储你的信件内容；信件与设定默认保存在本机。"
+        ],
+
+        featuresTitle: "功能概要",
+        featuresList: [
+          "对象资料、可选「回信要求」；书信撰写与阅读。",
+          "回信生成后锁定，约 <strong>5 分钟～8 小时</strong>内随机整分钟后解锁（每封不同）。",
+          "自备 API Key；可配置<strong>模型 ID</strong>（示例 <code>openai/gpt-4o-mini</code>）。",
+          "Key 存<strong>钥匙串</strong>；信件与资料<strong>SwiftData</strong>本机存储；可选本地通知（文案不含正文）。",
+          "浅色/深色/跟随系统；可删除本机全部通信数据（不自动清除钥匙串中的 Key）。"
+        ],
+
+        supportTitle: "支持与反馈",
+        supportIntro: "技术支持与反馈请访问：",
+        supportNote: "（GitHub Pages 页面；可在关联仓库中提交 Issue 或说明联系方式。）",
+
+        privacyTitle: "隐私与数据",
+        privacyLead: "以下为简要说明。OpenRouter 及模型方的处理以其 <a href=\"https://openrouter.ai/privacy\" rel=\"noopener noreferrer\">隐私政策</a>、<a href=\"https://openrouter.ai/terms\" rel=\"noopener noreferrer\">条款</a> 为准。",
+
+        pWhat: "收集与处理什么",
+        pWhatList: [
+          "本机：信件、发送与解锁状态、对象资料等，用于展示与管理。",
+          "钥匙串：API Key；本地偏好：模型 ID、外观等。",
+          "仅在<strong>你寄信并成功触发生成回信</strong>时，将所需<strong>文本</strong>经 <strong>HTTPS</strong> 发往 <strong>OpenRouter</strong>，由其路由至所选模型。",
+          "本地通知不包含信件正文。"
+        ],
+        pUse: "用途",
+        pUseList: [
+          "仅用于生成并展示助理回信（含锁定流程）。",
+          "不用于广告或与本功能无关的画像；开发者无通信内容自有后端。"
+        ],
+        pShare: "第三方与路径",
+        pShareList: [
+          "<strong>会</strong>共享生成所需的文本给 OpenRouter 及下游模型服务：<strong>设备 → OpenRouter → 模型</strong>。"
+        ],
+        pKeep: "保留",
+        pKeepList: [
+          "本机数据直至你删除或卸载；Key 直至你在设置中移除或系统清除。",
+          "第三方留存以其政策为准。"
+        ],
+        pChoice: "你的选择",
+        pChoiceList: [
+          "可随时移除 Key 或停止使用生成；可关通知、删本机数据。",
+          "请勿提交违法、侵权或不宜外传的内容。"
+        ],
+
+        aiTitle: "AI 与生成式内容",
+        aiLead: "回信由<strong>大语言模型</strong>自动生成，使用前请知悉。",
+
+        aiNature: "内容性质",
+        aiNatureList: [
+          "非真人撰写、未经人工核查；可能有误、不贴切或带偏见，请自行判断，勿当作事实或承诺。"
+        ],
+        aiNot: "非专业服务",
+        aiNotList: [
+          "不构成心理咨询、医疗、法律或危机干预；遇紧急情况请联系当地紧急服务或专业机构。"
+        ],
+        aiYou: "你的责任",
+        aiYouList: [
+          "你对输入与使用后果负责；勿用于违法或侵权用途。服务可用性以 OpenRouter 与模型方为准。"
+        ],
+
+        reqTitle: "系统与网络",
+        reqList: [
+          "需可访问 <strong>openrouter.ai</strong> 与有效 API Key。",
+          "最低 iOS 版本以 App Store 为准。"
+        ],
+
+        footCopy: "© 2026 Love Letter（爱的信件）",
+        footNote: "本页用于产品与隐私简要披露；应用源码见仓库说明。"
       },
 
-      "en": {
-        meta: {
-          title: "Love Letter · AI Epistolary Companion · Product & Support",
-          description: "Love Letter for iPhone: exchange letters with a fictional correspondent and generate AI replies via OpenRouter. Letters and settings are stored locally. Bring your own API key."
-        },
-        header: {
-          brand: "Love Letter",
-          subtitle: "Letter exchange with a fictional correspondent · iOS · Bring your own OpenRouter API",
-          badge: "Lifestyle / Writing",
-          langZh: "中文",
-          langEn: "English"
-        },
-        product: {
-          title: "Product Overview",
-          paragraphs: [
-            "\"Love Letter\" is a letter-based iPhone experience. You can define a fictional correspondent (name, relationship, personality) and exchange letters with them. After you send your own letter, the app calls your selected AI model through <strong>OpenRouter</strong> to generate an <strong>assistant reply</strong>. Replies become readable after a randomized waiting period to simulate the pace of letters in transit. The product emphasizes companionship and empathetic expression, suitable for users who want to process emotions through writing, preserve memories, or practice gentle dialogue.",
-            "To use this app, you must provide a valid <strong>OpenRouter API Key</strong> in Settings and ensure network access to OpenRouter. The developer <strong>does not operate</strong> a proprietary relay/storage backend for your correspondence. Letters and character settings are stored on your device by default."
-          ]
-        },
-        features: {
-          title: "Feature Summary",
-          items: [
-            "Define a correspondent's name, relationship summary, personality, and preferred form of address; optionally add custom reply-writing guidance.",
-            "Write and read in a letter-style flow. AI replies are initially locked and become readable after a randomized whole-minute delay of roughly <strong>5 minutes to 8 hours</strong> (varies per letter).",
-            "Uses your own <strong>OpenRouter API Key</strong>; supports configurable <strong>model ID</strong> in Settings (default example: <code>openai/gpt-4o-mini</code>).",
-            "API key is stored in system <strong>Keychain</strong>; letters and profile data are stored locally via <strong>SwiftData</strong>. Optional local notifications can alert when a reply unlocks; notification text is intentionally vague and <strong>does not include full letter content</strong>.",
-            "Supports Light / Dark / System appearance. You can delete all local correspondence data in Settings (does not automatically remove API key from Keychain)."
-          ]
-        },
-        support: {
-          title: "Support & Feedback",
-          line1: "For support, suggestions, or issue reports, please contact through the source repository:",
-          repo: "https://agent026-026.github.io/loveletter_web/"
-        },
-        privacy: {
-          title: "Privacy & Data",
-          lead: "The following describes how Love Letter handles your content and AI calls. Processing by OpenRouter and model providers is governed by their own published materials, including the <a href=\"https://openrouter.ai/privacy\" rel=\"noopener noreferrer\">Privacy Policy</a> and <a href=\"https://openrouter.ai/terms\" rel=\"noopener noreferrer\">Terms</a>.",
-          blocks: [
-            {
-              h3: "What data we process",
-              items: [
-                "By default, <strong>letter body, send status, unlock timing</strong>, and thread-linked <strong>profile fields</strong> (such as form of address, relationship/personality descriptions, and optional writing preferences) created or edited on your device are stored locally for in-app display and management.",
-                "Your <strong>OpenRouter API Key</strong> entered in <strong>Settings</strong> is stored in system <strong>Keychain</strong>. Selected <strong>model ID</strong>, appearance preferences, and similar options are stored in local user preferences for request assembly and UI behavior.",
-                "This app <strong>does not</strong> collect biometric data tied to your identity on device. AI reply generation processes <strong>text you actively provide</strong> (letters and profile text), not facial-recognition template uploads (this data type is not part of the core flow).",
-                "Only when you <strong>actively send a letter and successfully trigger \"Generate Reply\"</strong> does the app send required <strong>text payload</strong> over <strong>HTTPS</strong> directly to <strong>OpenRouter</strong>. This usually includes: system-prompt profile summary, retained sent conversation text, and structural placeholders used to preserve context format. OpenRouter then routes the request to your selected model provider.",
-                "If you authorize <strong>local notifications</strong>, the system triggers reminders only at scheduled times. Notifications do not include full letter body text, and no extra correspondence content is collected via notification channels."
-              ]
-            },
-            {
-              h3: "How we use this data",
-              items: [
-                "Only to call third-party large language models, transform your letter/context into <strong>assistant reply text</strong>, and present results in-app according to product design (including lock/unlock flow).",
-                "We <strong>do not</strong> use your content for developer-side ad targeting, profile building, or purposes unrelated to this app's letter/reply function. The developer <strong>does not operate</strong> a proprietary relay/storage backend for your correspondence content."
-              ]
-            },
-            {
-              h3: "Third-party sharing & data path",
-              items: [
-                "<strong>Yes.</strong> To generate AI replies, related <strong>text</strong> is sent from your device to <strong>OpenRouter</strong> (openrouter.ai), then forwarded to the selected <strong>model provider</strong>. Path: <strong>your iPhone/iPad → OpenRouter → selected AI model service</strong>.",
-                "Storage, logging, and retention policies are controlled by each service provider under their own terms. We do not control internal third-party logging details; please review official documentation."
-              ]
-            },
-            {
-              h3: "Retention period",
-              items: [
-                "<strong>On your device</strong>: letters and profile data remain in app sandbox until you use \"Delete all communication data\", remove the app, or clear app data. API key remains in Keychain until removed in Settings or cleared by system keychain behavior.",
-                "<strong>OpenRouter / model side</strong>: request-response handling and retention follow each provider's current policies."
-              ]
-            },
-            {
-              h3: "Your choices & withdrawal",
-              items: [
-                "You may remove your API key in Settings or stop using generation at any time. If no generation request is triggered, generation-related text is not transmitted to OpenRouter.",
-                "You may disable or revoke notification permissions. You may also delete all local communication data in Settings (API key and some UI preferences may remain as noted in-app).",
-                "Please ensure you have lawful rights to submitted content. Do not submit unlawful, infringing, or confidential information that must not be externally transmitted."
-              ]
-            }
-          ]
-        },
-        ai: {
-          title: "AI & Generative Content Notice",
-          lead: "Core functionality relies on <strong>generative AI (large language models)</strong> to produce assistant replies. Please read the following before use.",
-          blocks: [
-            {
-              h3: "Nature of generated content",
-              items: [
-                "Assistant replies, tone suggestions, and narrative details shown in-app are <strong>automatically generated by AI models</strong>, not written by human operators and not manually fact-checked.",
-                "Output may be <strong>incorrect, mismatched, repetitive, emotionally excessive/insufficient, or inconsistent with real events</strong>. It may also reflect statistical bias in training data. Please <strong>exercise your own judgment</strong> and treat outputs as supportive expression tools, not objective facts or commitments."
-              ]
-            },
-            {
-              h3: "Not professional advice",
-              items: [
-                "AI-generated text <strong>does not constitute</strong> and <strong>cannot replace</strong> professional services (mental health, medical, legal, crisis intervention, etc.).",
-                "If you face acute risk (self-harm, harm to others, violence, or emergency situations), contact local emergency services or professionals immediately. This app cannot monitor or intervene in real-world danger."
-              ]
-            },
-            {
-              h3: "Your responsibility & acceptable use",
-              items: [
-                "You are responsible for the legality of your inputs and any actions based on generated output. Do not use outputs for unlawful, fraudulent, harassing, or rights-infringing behavior (including rights involving deceased persons, portrait/reputation, etc.).",
-                "Model availability, style, and policy behavior depend on <strong>OpenRouter</strong> and the selected <strong>model provider</strong>. Availability changes caused by third-party updates, regional limits, or network conditions are governed by provider rules."
-              ]
-            }
-          ]
-        },
-        requirements: {
-          title: "System & Network",
-          items: [
-            "Requires network access to <strong>openrouter.ai</strong> and a valid OpenRouter API Key.",
-            "Minimum iOS version is subject to App Store listing information."
-          ]
-        },
-        footer: {
-          copyright: "© 2026 Love Letter",
-          note: "This page is hosted in the <code>loveletter_web</code> repository for public product/privacy disclosure; app source is available via the repository link above."
-        }
+      en: {
+        metaTitle: "Love Letter · Product & Support",
+        metaDesc: "Love Letter: letter-style companion on iPhone; bring your own OpenRouter API; replies generated by AI; data stays mainly on device.",
+        brand: "Love Letter",
+        subtitle: "Letters with a fictional correspondent · iOS · Bring your own OpenRouter API",
+        badge: "Lifestyle / Writing",
+        btnZh: "中文",
+        btnEn: "English",
+
+        productTitle: "Overview",
+        productP: [
+          "Define a correspondent and exchange letters on iPhone. After you send a letter, the app calls your chosen model via <strong>OpenRouter</strong> to generate an <strong>assistant reply</strong>, unlocked after a random delay to mimic mail in transit. Focus is companionship and emotional expression—not human-authored mail.",
+          "You need a valid <strong>OpenRouter API Key</strong> and network access. The developer runs <strong>no backend</strong> that relays or stores your correspondence; letters and settings stay on your device by default."
+        ],
+
+        featuresTitle: "Features",
+        featuresList: [
+          "Profile fields and optional reply preferences; letter reading/writing.",
+          "Replies lock then unlock after ~<strong>5 minutes–8 hours</strong> random whole minutes (varies per letter).",
+          "Your API key; configurable <strong>model ID</strong> (example <code>openai/gpt-4o-mini</code>).",
+          "Key in <strong>Keychain</strong>; letters in <strong>SwiftData</strong>; optional notifications (no body text).",
+          "Light/Dark/System; delete local correspondence (does not auto-remove Keychain key)."
+        ],
+
+        supportTitle: "Support",
+        supportIntro: "Support and feedback:",
+        supportNote: "(GitHub Pages; use the linked repo for Issues or contact info if provided.)",
+
+        privacyTitle: "Privacy & data",
+        privacyLead: "Summary only. OpenRouter and model providers govern their processing—see their <a href=\"https://openrouter.ai/privacy\" rel=\"noopener noreferrer\">Privacy Policy</a> and <a href=\"https://openrouter.ai/terms\" rel=\"noopener noreferrer\">Terms</a>.",
+
+        pWhat: "What we process",
+        pWhatList: [
+          "On device: letters, status, unlock timing, profile—for display and management.",
+          "Keychain: API key; preferences: model ID, appearance, etc.",
+          "Only when you <strong>send</strong> and trigger generation: required <strong>text</strong> sent over <strong>HTTPS</strong> to <strong>OpenRouter</strong>, routed to your model.",
+          "Notifications do not include letter bodies."
+        ],
+        pUse: "Use",
+        pUseList: [
+          "Only to produce and show assistant replies (including lock flow).",
+          "Not for ads or unrelated profiling; no developer-owned correspondence backend."
+        ],
+        pShare: "Third parties",
+        pShareList: [
+          "<strong>Yes</strong>—generation text goes to OpenRouter and the selected model: <strong>device → OpenRouter → model</strong>."
+        ],
+        pKeep: "Retention",
+        pKeepList: [
+          "Local data until you delete or uninstall; key until removed or cleared by the system.",
+          "Vendor retention follows their policies."
+        ],
+        pChoice: "Your choices",
+        pChoiceList: [
+          "Remove key or stop generation anytime; turn off notifications; erase local data.",
+          "Do not submit unlawful, infringing, or confidential content you may not share."
+        ],
+
+        aiTitle: "AI & generated content",
+        aiLead: "Replies come from <strong>large language models</strong>. Read before use.",
+
+        aiNature: "Nature",
+        aiNatureList: [
+          "Not human-written or fact-checked; may be wrong, mismatched, or biased—use judgment; not facts or promises."
+        ],
+        aiNot: "Not professional advice",
+        aiNotList: [
+          "Not counseling, medical, legal, or crisis care—for emergencies contact local services immediately."
+        ],
+        aiYou: "Your responsibility",
+        aiYouList: [
+          "You are responsible for inputs and use; no unlawful or infringing use. Availability follows OpenRouter/providers."
+        ],
+
+        reqTitle: "System & network",
+        reqList: [
+          "Network to <strong>openrouter.ai</strong> and a valid API key.",
+          "Minimum iOS—see App Store."
+        ],
+
+        footCopy: "© 2026 Love Letter",
+        footNote: "This page is a short product/privacy summary; see repo for app source."
       }
     };
 
-    function resolveInitialLang() {
-      const saved = localStorage.getItem("loveletter_lang");
-      if (saved === "zh-Hans" || saved === "en") return saved;
-      const nav = (navigator.language || "").toLowerCase();
-      return nav.startsWith("zh") ? "zh-Hans" : "en";
-    }
-
-    function renderList(items) {
-      const ul = document.createElement("ul");
-      items.forEach(item => {
+    function ul(items) {
+      const el = document.createElement("ul");
+      items.forEach(t => {
         const li = document.createElement("li");
-        li.innerHTML = item;
-        ul.appendChild(li);
+        li.innerHTML = t;
+        el.appendChild(li);
       });
-      return ul;
+      return el;
     }
 
-    function clearNode(node) {
-      while (node.firstChild) node.removeChild(node.firstChild);
-    }
-
-    function renderSectionBasic(targetId, sectionData, withList = false) {
-      const root = document.getElementById(targetId);
-      clearNode(root);
-
+    function sectionBasic(id, title, paragraphs, list) {
+      const root = document.getElementById(id);
+      root.innerHTML = "";
       const h2 = document.createElement("h2");
-      h2.textContent = sectionData.title;
+      h2.textContent = title;
       root.appendChild(h2);
-
-      if (sectionData.paragraphs) {
-        sectionData.paragraphs.forEach(p => {
-          const el = document.createElement("p");
-          el.innerHTML = p;
-          root.appendChild(el);
-        });
-      }
-
-      if (withList && sectionData.items) {
-        root.appendChild(renderList(sectionData.items));
-      }
+      paragraphs.forEach(html => {
+        const p = document.createElement("p");
+        p.innerHTML = html;
+        root.appendChild(p);
+      });
+      if (list && list.length) root.appendChild(ul(list));
     }
 
-    function renderSupport(data) {
-      const root = document.getElementById("support");
-      clearNode(root);
-
+    function sectionPrivacyLike(id, s) {
+      const root = document.getElementById(id);
+      root.innerHTML = "";
       const h2 = document.createElement("h2");
-      h2.textContent = data.title;
+      h2.textContent = s.privacyTitle;
       root.appendChild(h2);
-
-      const p1 = document.createElement("p");
-      p1.textContent = data.line1;
-      root.appendChild(p1);
-
-      const p2 = document.createElement("p");
-      const a = document.createElement("a");
-      a.href = data.repo;
-      a.textContent = data.repo;
-      p2.appendChild(a);
-      root.appendChild(p2);
-    }
-
-    function renderBlocksSection(targetId, data, leadClassName) {
-      const root = document.getElementById(targetId);
-      clearNode(root);
-
-      const h2 = document.createElement("h2");
-      h2.textContent = data.title;
-      root.appendChild(h2);
-
       const lead = document.createElement("p");
-      lead.className = leadClassName;
-      lead.innerHTML = data.lead;
+      lead.className = "muted";
+      lead.innerHTML = s.privacyLead;
       root.appendChild(lead);
 
-      data.blocks.forEach(block => {
+      [["pWhat", "pWhatList"], ["pUse", "pUseList"], ["pShare", "pShareList"], ["pKeep", "pKeepList"], ["pChoice", "pChoiceList"]].forEach(([hk, lk]) => {
         const h3 = document.createElement("h3");
-        h3.textContent = block.h3;
+        h3.textContent = s[hk];
         root.appendChild(h3);
-        root.appendChild(renderList(block.items));
+        root.appendChild(ul(s[lk]));
       });
     }
 
-    function renderFooter(data) {
+    function sectionAI(id, s) {
+      const root = document.getElementById(id);
+      root.innerHTML = "";
+      const h2 = document.createElement("h2");
+      h2.textContent = s.aiTitle;
+      root.appendChild(h2);
+      const lead = document.createElement("p");
+      lead.className = "muted";
+      lead.innerHTML = s.aiLead;
+      root.appendChild(lead);
+
+      [["aiNature", "aiNatureList"], ["aiNot", "aiNotList"], ["aiYou", "aiYouList"]].forEach(([hk, lk]) => {
+        const h3 = document.createElement("h3");
+        h3.textContent = s[hk];
+        root.appendChild(h3);
+        root.appendChild(ul(s[lk]));
+      });
+    }
+
+    function renderSupport(s) {
+      const root = document.getElementById("support");
+      root.innerHTML = "";
+      const h2 = document.createElement("h2");
+      h2.textContent = s.supportTitle;
+      root.appendChild(h2);
+      const p = document.createElement("p");
+      p.innerHTML = s.supportIntro + " <a href=\"" + SUPPORT_URL + "\" rel=\"noopener noreferrer\">" + SUPPORT_URL + "</a>";
+      root.appendChild(p);
+      const note = document.createElement("p");
+      note.className = "muted";
+      note.textContent = s.supportNote;
+      root.appendChild(note);
+    }
+
+    function renderFooter(s) {
       const root = document.getElementById("footer");
-      clearNode(root);
-
+      root.innerHTML = "";
       const p1 = document.createElement("p");
-      p1.textContent = data.copyright;
+      p1.textContent = s.footCopy;
       root.appendChild(p1);
-
       const p2 = document.createElement("p");
-      p2.className = "disclaimer-lead";
-      p2.style.marginTop = "0.75rem";
-      p2.innerHTML = data.note;
+      p2.className = "muted";
+      p2.style.marginTop = "0.5rem";
+      p2.textContent = s.footNote;
       root.appendChild(p2);
     }
 
-    function applyLang(lang) {
-      const dict = i18n[lang] || i18n["zh-Hans"];
+    function initLang() {
+      const saved = localStorage.getItem("loveletter_lang");
+      if (saved === "zh-Hans" || saved === "en") return saved;
+      const n = (navigator.language || "").toLowerCase();
+      return n.startsWith("zh") ? "zh-Hans" : "en";
+    }
 
+    function apply(lang) {
+      const s = STR[lang];
       document.documentElement.lang = lang;
-      document.title = dict.meta.title;
-      const desc = document.querySelector('meta[name="description"]');
-      if (desc) desc.setAttribute("content", dict.meta.description);
+      document.title = s.metaTitle;
+      const m = document.querySelector('meta[name="description"]');
+      if (m) m.setAttribute("content", s.metaDesc);
 
-      document.getElementById("brand").textContent = dict.header.brand;
-      document.getElementById("subtitle").textContent = dict.header.subtitle;
-      document.getElementById("badge").textContent = dict.header.badge;
+      document.getElementById("brand").textContent = s.brand;
+      document.getElementById("subtitle").textContent = s.subtitle;
+      document.getElementById("badge").textContent = s.badge;
 
-      const zhBtn = document.querySelector('[data-lang-btn="zh-Hans"]');
-      const enBtn = document.querySelector('[data-lang-btn="en"]');
-      zhBtn.textContent = dict.header.langZh;
-      enBtn.textContent = dict.header.langEn;
-
-      document.querySelectorAll("[data-lang-btn]").forEach(btn => {
-        btn.classList.toggle("active", btn.getAttribute("data-lang-btn") === lang);
+      document.querySelectorAll("[data-lang]").forEach(btn => {
+        const is = btn.getAttribute("data-lang") === lang;
+        btn.classList.toggle("active", is);
+        btn.textContent = btn.getAttribute("data-lang") === "zh-Hans" ? s.btnZh : s.btnEn;
       });
 
-      renderSectionBasic("product", dict.product, false);
-      renderSectionBasic("features", dict.features, true);
-      renderSupport(dict.support);
-      renderBlocksSection("privacy", dict.privacy, "disclaimer-lead");
-      renderBlocksSection("ai", dict.ai, "disclaimer-lead");
-      renderSectionBasic("requirements", dict.requirements, true);
-      renderFooter(dict.footer);
+      sectionBasic("product", s.productTitle, s.productP, null);
+      sectionBasic("features", s.featuresTitle, [], s.featuresList);
+      renderSupport(s);
+      sectionPrivacyLike("privacy", s);
+      sectionAI("ai", s);
+      sectionBasic("requirements", s.reqTitle, [], s.reqList);
+      renderFooter(s);
 
       localStorage.setItem("loveletter_lang", lang);
     }
 
-    document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-lang-btn]");
-      if (!btn) return;
-      applyLang(btn.getAttribute("data-lang-btn"));
+    document.querySelectorAll("[data-lang]").forEach(btn => {
+      btn.addEventListener("click", () => apply(btn.getAttribute("data-lang")));
     });
 
-    applyLang(resolveInitialLang());
+    apply(initLang());
   </script>
 </body>
 </html>
